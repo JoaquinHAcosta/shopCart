@@ -27,7 +27,7 @@ function App() {
 
   return (
     <>
-      <h1>Shopping Cart</h1>
+      <h1>Shopping Cart 🛒</h1>
       <Header changeFilters={setFilters}/>
       <Products products={filteredProducts}/>
     </>
