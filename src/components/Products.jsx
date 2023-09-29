@@ -1,11 +1,11 @@
 import './Products.css'
 import { AddToCartIcon } from './Icons.jsx'
 
-const Products = ({products}) => {
+const Products = ({ products }) => {
   return (
-    <main className='container'>
+    <main className='products'>
         <ul>
-            {products.map(product => (
+            {products.slice(0, 10).map(product => (
                 <li key={product.id}>
                     <img 
                         src={product.thumbnail} 
