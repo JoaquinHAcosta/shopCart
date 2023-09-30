@@ -1,9 +1,9 @@
 import Filters from "./Filters"
 
-const Header = ({ changeFilters }) => {
+const Header = () => {
     return (
         <header>
-            <Filters changeFilters={changeFilters}/>
+            <Filters/>
         </header>
     )
 }
