@@ -6,7 +6,7 @@ export const FiltersProvider = ({ children }) => {
     return (
         <FiltersContext.Provider value={{
             category: 'all',
-            minPrince: 0
+            minPrice: 0
         }}>
             {children}
         </FiltersContext.Provider>
