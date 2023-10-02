@@ -1,38 +1,65 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer } from "react";
 
 export const CartContext = createContext()
 
-export const CartProvider = ({ children }) => {
+const initialState = []
+const reducer = (state, action) => {
+    const { type: actionType, payload: actionPayload } = action
+    switch (actionType) {
+        case 'ADD_TO_CART':
+            {
+                const { id } = actionPayload
+                const productInCartIndex = state.findIndex(item => item.id === id)
 
-    const [ cart, setCart ] = useState([])
+                if (productInCartIndex >= 0) {
+                    const newState = structuredClone(state)
+                    newState[productInCartIndex].quantity += 1
+                    return newState
+                }
+            }
 
-    const addToCart = (product) => {
-        const productInCartIndex = cart.findIndex(item => item.id === product.id)
-
-        if (productInCartIndex >= 0) {
-            const newCart = structuredClone(cart)
-            newCart[productInCartIndex].quantity += 1
-            return setCart(newCart)
+            return [
+                ...state,
+                {
+                    ...actionPayload,
+                    quantity: 1
+                }
+            ]
+            
+        case 'REMOVE_FROM_CART': {
+            const { id } = actionPayload
+            return state.filter(item => item.id !== id)
         }
 
-        setCart(prevState => ([
-            ...prevState,
-            {
-                ...product,
-                quantity: 1
-            }
-        ]))
+        case 'CLEAR_CAERT': {
+            return initialState
+        }
+        default:
     }
+}
 
-    const clearCart = () => {
-        setCart([])
-    }
+export const CartProvider = ({ children }) => {
+
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    const addToCart = (product) => dispatch({
+        type: 'ADD_TO_CART',
+        payload: product
+    })
+
+    const removeFromCart = (product) => dispatch({
+        type: 'REMOVE_FROM_CART',
+        payload: product
+    })
+
+    const cleanCart = () => dispatch({ type: 'CLEAN_CART' })
 
     return (
         <CartContext.Provider value={{
-            cart,
+            cart: state,
             addToCart,
-            clearCart
+            removeFromCart,
+            cleanCart
         }}>
             {children}
         </CartContext.Provider>
